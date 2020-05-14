@@ -67,6 +67,7 @@ func ReadMessages(log *logrus.Logger) {
 			if err != nil {
 				log.Error("Error sending email ", err)
 			}
+			log.Infof("successfully send email to %s", usr.Email)
 		default:
 			log.Info("different topic")
 		}

@@ -23,7 +23,7 @@ function App() {
       alert(val.statusText)
     }).catch(err => {
       console.error(err.response)
-      if (err.response.data) {
+      if (err.response) {
         alert(err.response.data.message)
       }
     })

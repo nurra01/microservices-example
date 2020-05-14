@@ -15,6 +15,7 @@ var dbConn *sqlx.DB
 func ConnectDB() (*sqlx.DB, error) {
 	// get DB connection URI and driver name
 	dbDriver, dbURI := getDbURI()
+	fmt.Println(dbURI)
 	// connect to the DB
 	conn, err := sqlx.Connect(dbDriver, dbURI)
 	if err != nil {

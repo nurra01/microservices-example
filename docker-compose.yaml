@@ -71,9 +71,11 @@ services:
     build: ./services/user-storage
     image: user-storage-service
     container_name: user-storage-service
+    restart: always
     depends_on: 
       - kafka
-  
+      - database
+
   email-service:
     build: ./services/email
     image: email-service

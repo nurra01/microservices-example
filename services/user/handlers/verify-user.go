@@ -15,6 +15,7 @@ import (
 // Verify handles GET request to verify a new user
 func (h *RegisterUserHandler) Verify(rw http.ResponseWriter, req *http.Request) {
 	verifyID := mux.Vars(req)["id"]
+	h.log.Infof("verify user with id: %s\n", verifyID)
 
 	// fetch user from redis using verifyID as a key
 	user, err := redis.GetUser(verifyID)

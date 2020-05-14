@@ -15,7 +15,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var reader *kafka.Reader // pointer to the reader, so Pull can use it
+var reader *kafka.Reader // pointer to the reader
 
 // Configure sets up a kafka reader
 func Configure() (*kafka.Reader, error) {
@@ -66,6 +66,7 @@ func ReadMessages(log *logrus.Logger) {
 			if err != nil {
 				log.Error(err)
 			}
+			log.Infof("saved user with email %s in DB\n", usr.Email)
 		}
 	}
 }
