@@ -31,7 +31,7 @@ services:
       - zoo
   
   database:
-    container_name: db-storage
+    container_name: database
     image: postgres # use latest official postgres version
     ports:
       - "5432:5432"
