@@ -1,3 +1,8 @@
+html, #root {
+  height: 100%;
+  width: 100%;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -5,9 +10,48 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  height: 100%;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.not-found {
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: #27496d;
+  display: flex;
+  justify-content: center;
+}
+
+.not-found-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  color: white;
+}
+
+#title {
+  text-align: center;
+  font-size: 4rem;
+}
+
+#message {
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 2rem;
+}
+
+.not-found-content button {
+  font-size: 16px;
+  border-radius: 10px;
+  text-transform: uppercase;
+  width: 15em;
+  height: 3em;
 }
