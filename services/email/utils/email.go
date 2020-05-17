@@ -18,7 +18,7 @@ func SendVerifyEmail(emailTo string, name string, verifyID string) error {
 	// Here we do it all: connect to our server, set up a message and send it
 	recipients := []string{emailTo}
 
-	verifyURL := fmt.Sprintf("http://localhost:8080/user/verify/%s", verifyID)
+	verifyURL := fmt.Sprintf("http://localhost:3000/verify/%s", verifyID)
 
 	// email details and content
 	msg := []byte(fmt.Sprintf("To: %s \r\n", emailTo) +

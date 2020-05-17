@@ -63,7 +63,7 @@ func main() {
 	// CORS handler
 	crs := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000"},
-		AllowedMethods:   []string{"POST"},
+		AllowedMethods:   []string{"GET", "POST"},
 		AllowedHeaders:   []string{"Content-Type", "Access-Control-Allow-Origin"},
 		AllowCredentials: true,
 	})

@@ -14,7 +14,8 @@ function NotFound(props) {
                     type="submit"
                     variant="contained"
                     color="primary"
-                    onClick={handleRedirect}>
+                    onClick={handleRedirect}
+                >
                     Go to homepage
                 </Button>
             </div>

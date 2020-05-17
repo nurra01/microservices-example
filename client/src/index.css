@@ -19,6 +19,53 @@ code {
     monospace;
 }
 
+.home {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem auto;
+  width: 80%;
+}
+
+.register {
+  display: 'flex';
+  flex-direction: 'column';
+  justify-content: 'center';
+  align-items: 'center';
+  width: 60%;
+  margin: 0 auto;
+}
+
+.register form {
+  width: 80%;
+  margin: 1em auto;
+}
+
+.alert {
+  margin: 3em auto
+}
+
+.register h1 {
+  text-align: center;
+}
+
+
+.verify {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(24, 54, 54);
+  height: 100%;
+  width: 100%;
+}
+
+.verify h1 {
+  color: white;
+  margin: 4rem auto;
+}
+
 .not-found {
   width: 100%;
   height: 100%;
