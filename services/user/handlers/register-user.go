@@ -32,7 +32,7 @@ func (h *RegisterUserHandler) MiddlewareValidateRegisterUser(next http.Handler) 
 			return
 		}
 
-		// validate the product
+		// validate the user
 		err = usr.Validate()
 		if err != nil {
 			h.log.Error("failed validating user body")
@@ -42,7 +42,16 @@ func (h *RegisterUserHandler) MiddlewareValidateRegisterUser(next http.Handler) 
 			return
 		}
 
-		// add the product to the context
+		// hash user password
+		usr.Password, err = utils.HashPassword(usr.Password)
+		if err != nil {
+			h.log.Error(err)
+			rw.WriteHeader(http.StatusBadRequest)
+			utils.ToJSON(&models.GenericError{Message: "failed to process passed password"}, rw)
+			return
+		}
+
+		// add a user to the context
 		ctx := context.WithValue(r.Context(), KeyUser{}, usr)
 		r = r.WithContext(ctx)
 

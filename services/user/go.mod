@@ -12,5 +12,5 @@ require (
 	github.com/rs/cors v1.7.0
 	github.com/segmentio/kafka-go v0.3.6
 	github.com/sirupsen/logrus v1.5.0
-	golang.org/x/crypto v0.0.0-20191122220453-ac88ee75c92c // indirect
+	golang.org/x/crypto v0.0.0-20191122220453-ac88ee75c92c
 )
