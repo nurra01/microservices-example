@@ -60,6 +60,13 @@ func ReadMessages(log *logrus.Logger) {
 			log.Error(err)
 		}
 
+		// save token in redis with expiration time
+		err = redis.SaveToken(msg.Value)
+		if err != nil {
+			log.Error(err)
+		}
+		log.Info("saved token in redis")
+
 		// push user to verify topic so he/she receives email with verification link
 		err = Push(context.Background(), []byte(verifyID), msg.Value)
 		if err != nil {

@@ -14,7 +14,7 @@ import (
 // use writer pointer so we can push messages in Push
 var writer *kafka.Writer
 
-// ConfigureWriter sets up a kafka writer
+// ConfigureWriter sets up a kafka writer to produce messages to 'verifiy user' topic
 func ConfigureWriter() (w *kafka.Writer, err error) {
 	brokerURL := fmt.Sprintf("%s:%s", os.Getenv("KAFKA_BROKER_HOST"), os.Getenv("KAFKA_BROKER_PORT"))
 	brokers := []string{brokerURL}
