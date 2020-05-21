@@ -69,5 +69,3 @@ KAFKA_BROKER_PORT=9092
 
 **Note:**
 If you try to use your gmail account to send email, most probably it will fail with error "Username and Password not accepted". You need to enable less secure apps. Check out this link: https://hotter.io/docs/email-accounts/secure-app-gmail/
-
-To run you need to create files with environment variables for every service.
