@@ -9,6 +9,7 @@ function Register() {
     const [firstName, handleFirstNameChange] = useInputState("")
     const [lastName, handleLastNameChange] = useInputState("")
     const [email, handleEmailChange] = useInputState("")
+    const [password, handlePasswordChange] = useInputState("")
     const [isRegistered, setIsRegistered] = useState(null)
     const [message, setMessage] = useState("")
 
@@ -18,7 +19,8 @@ function Register() {
             await axios.post("http://localhost:8080/user/register", {
                 firstName,
                 lastName,
-                email
+                email,
+                password
             })
             setMessage("Great, you are almost there!")
             setIsRegistered(true)
@@ -57,6 +59,11 @@ function Register() {
                                 label="Email"
                                 value={email}
                                 onChange={handleEmailChange}
+                            />
+                            <TextField
+                                label="Password"
+                                value={password}
+                                onChange={handlePasswordChange}
                             />
                             <Button
                                 type="submit"
