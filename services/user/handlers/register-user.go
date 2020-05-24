@@ -16,7 +16,7 @@ type KeyUser struct{}
 
 // MiddlewareValidateRegisterUser validates all fields to be passed correctly
 func (h *RegisterUserHandler) MiddlewareValidateRegisterUser(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(rw http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		// add header to make content JSON
 		rw.Header().Add("Content-Type", "application/json")
 
@@ -24,7 +24,7 @@ func (h *RegisterUserHandler) MiddlewareValidateRegisterUser(next http.Handler) 
 		usr := &models.RegisterUser{}
 
 		// read req body and deserialize it to the
-		err := utils.FromJSON(usr, r.Body)
+		err := utils.FromJSON(usr, req.Body)
 		if err != nil {
 			h.log.Println("failed deserializing user body", err)
 			rw.WriteHeader(http.StatusBadRequest)
@@ -52,11 +52,11 @@ func (h *RegisterUserHandler) MiddlewareValidateRegisterUser(next http.Handler) 
 		}
 
 		// add a user to the context
-		ctx := context.WithValue(r.Context(), KeyUser{}, usr)
-		r = r.WithContext(ctx)
+		ctx := context.WithValue(req.Context(), KeyUser{}, usr)
+		req = req.WithContext(ctx)
 
 		// Call the next handler, which can be another middleware in the chain, or the final handler.
-		next.ServeHTTP(rw, r)
+		next.ServeHTTP(rw, req)
 	})
 }
 

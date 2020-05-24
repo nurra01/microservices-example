@@ -29,6 +29,9 @@ func main() {
 	}
 
 	port := os.Getenv("PORT") // service run port
+	if port == "" {
+		port = "8080"
+	}
 
 	// configure kafka writer
 	w1, w2, err := kafka.Configure()
