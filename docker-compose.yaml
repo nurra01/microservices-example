@@ -58,6 +58,17 @@ services:
     depends_on:
       - kafka
       - redis
+  
+  auth-service:
+    build: "./services/auth"
+    image: auth-service
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+    restart: always
+    depends_on: 
+      - database
+      - redis
 
   redis-storage-service:
     build: ./services/redis-storage
