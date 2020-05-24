@@ -3,8 +3,6 @@ package redis
 import (
 	"fmt"
 	"os"
-	"services/redis-storage/models"
-	"services/redis-storage/utils"
 	"time"
 
 	"github.com/go-redis/redis"
@@ -37,28 +35,6 @@ func SaveUser(verifyID string, user []byte) error {
 	ok, err := client.SetNX(verifyID, user, 10*time.Minute).Result() // expiration time is 10 minutes
 	if err != nil || !ok {
 		return fmt.Errorf("failed to set key with user value. %s", err.Error())
-	}
-
-	return nil
-}
-
-// SaveToken saves a token in Redis storage for 15 minutes
-func SaveToken(msg []byte) error {
-	var user *models.RegisterUser
-	// convert byte stream to object
-	err := utils.FromByteToObject(msg, user)
-	if err != nil {
-		return fmt.Errorf("failed to deserialize message from kafka. %s", err.Error())
-	}
-	// create a token from user object
-	token, err := utils.CreateToken(user)
-	if err != nil {
-		return err
-	}
-	// set a email key with token value
-	ok, err := client.SetNX(user.Email, token, 15*time.Minute).Result() // expiration time is 15 minutes
-	if err != nil || !ok {
-		return fmt.Errorf("failed to set key with token value %s", err.Error())
 	}
 
 	return nil
