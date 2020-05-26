@@ -10,7 +10,7 @@ function Verify(props) {
 
     const handleRedirect = () => {
         if (isVerified) {
-            props.history.push("/")
+            props.history.push("/login")
         } else {
             props.history.push("/register")
         }
@@ -48,7 +48,7 @@ function Verify(props) {
                             color="primary"
                             onClick={handleRedirect}
                         >
-                            {isVerified ? "Go to homepage" : "Register"}
+                            {isVerified ? "Login" : "Register"}
                         </Button>
                     </>
             }

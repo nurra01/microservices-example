@@ -23,6 +23,7 @@ type LoginReq struct {
 
 // LoginResp defines response stcture for Login
 type LoginResp struct {
+	*User
 	Token        string `json:"token"`
 	RefreshToken string `json:"refreshToken"`
 }

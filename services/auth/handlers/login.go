@@ -3,7 +3,6 @@ package handlers
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"net/http"
 	"services/auth/db"
 	"services/auth/models"
@@ -26,11 +25,9 @@ func (h *AuthHandler) MiddlewareValidateLogin(next http.Handler) http.Handler {
 		if err != nil {
 			h.log.Printf("failed deserializing login request body. Error: %s", err.Error())
 			if err.Error() == "EOF" {
-				rw.WriteHeader(http.StatusBadRequest)
-				utils.ToJSON(&models.GenericError{Message: "missing required body fields"}, rw)
+				RespondError(rw, "missing required body fields", http.StatusBadRequest)
 			} else {
-				rw.WriteHeader(http.StatusUnprocessableEntity)
-				utils.ToJSON(&models.GenericError{Message: err.Error()}, rw)
+				RespondError(rw, err.Error(), http.StatusUnprocessableEntity)
 			}
 			return
 		}
@@ -39,8 +36,7 @@ func (h *AuthHandler) MiddlewareValidateLogin(next http.Handler) http.Handler {
 		err = loginReq.Validate()
 		if err != nil {
 			h.log.Printf("failed login request validation. Error: %s", err.Error())
-			rw.WriteHeader(http.StatusBadRequest)
-			utils.ToJSON(&models.GenericError{Message: err.Error()}, rw)
+			RespondError(rw, err.Error(), http.StatusBadRequest)
 			return
 		}
 
@@ -63,20 +59,38 @@ func (h *AuthHandler) Login(rw http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		h.log.Errorf("failed to get user from DB. Error: %s", err.Error())
 		if err == sql.ErrNoRows {
-			rw.WriteHeader(http.StatusBadRequest)
-			utils.ToJSON(&models.GenericError{Message: "invalid email/password"}, rw)
+			RespondError(rw, "invalid email/password", http.StatusBadRequest)
 		} else {
-			rw.WriteHeader(http.StatusInternalServerError)
-			utils.ToJSON(&models.GenericError{Message: "failed to process request"}, rw)
+			RespondError(rw, "failed to process request", http.StatusInternalServerError)
 		}
 		return
 	}
 	// Verify passwords to match
 	err = utils.VerifyPassword(user.Password, loginReq.Password)
 	if err != nil {
-		rw.WriteHeader(http.StatusBadRequest)
-		utils.ToJSON(&models.GenericError{Message: "invalid email/password"}, rw)
+		RespondError(rw, "invalid email/password", http.StatusBadRequest)
 		return
 	}
-	fmt.Println(user, "logged user in")
+
+	// Generate a JWT token
+	token, err := utils.GenerateToken(user)
+	if err != nil {
+		RespondError(rw, "failed to process request", http.StatusInternalServerError)
+		return
+	}
+
+	// Genereate a JWT refresh token
+	refreshToken, err := utils.GenerateRefreshToken(user)
+	if err != nil {
+		RespondError(rw, "failed to process request", http.StatusInternalServerError)
+		return
+	}
+
+	// response structure
+	loginResp := &models.LoginResp{
+		user,
+		token,
+		refreshToken,
+	}
+	RespondSuccessJSON(rw, loginResp, http.StatusOK)
 }

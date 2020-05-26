@@ -34,6 +34,11 @@ func main() {
 		port = "8080"
 	}
 
+	// check secret key env variable
+	if os.Getenv("JWT_SECRET") == "" {
+		log.Fatal("missing JWT_SECRET env variable")
+	}
+
 	// configure db connection
 	err = db.Connect()
 	if err != nil {
