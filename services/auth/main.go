@@ -60,6 +60,7 @@ func main() {
 	// POST requests
 	postR := sm.Methods(http.MethodPost).Subrouter()
 	postR.Handle("/user/login", ah.MiddlewareValidateLogin(http.HandlerFunc(ah.Login)))
+	postR.Handle("/aut/token", ah.)
 
 	// CORS handler
 	crs := cors.New(cors.Options{
