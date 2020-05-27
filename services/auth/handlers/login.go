@@ -7,6 +7,7 @@ import (
 	"services/auth/db"
 	"services/auth/models"
 	"services/auth/utils"
+	"time"
 )
 
 // KeyLoginReq is context key for login request object
@@ -72,7 +73,7 @@ func (h *AuthHandler) Login(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Generate a JWT token
+	// Generate a JWT access token
 	token, err := utils.GenerateToken(user)
 	if err != nil {
 		RespondError(rw, "failed to process request", http.StatusInternalServerError)
@@ -90,7 +91,19 @@ func (h *AuthHandler) Login(rw http.ResponseWriter, req *http.Request) {
 	loginResp := &models.LoginResp{
 		user,
 		token,
-		refreshToken,
 	}
+
+	// set refresh token in cookie
+	cookie := &http.Cookie{
+		Name:     "refresh_token",
+		Value:    refreshToken,
+		HttpOnly: true,
+		Domain:   "",                                 // set domain if not localhost
+		Secure:   true,                               // set if we have HTPPS
+		Expires:  time.Now().Add(time.Hour * 24 * 7), // expires in 7 days
+	}
+	http.SetCookie(rw, cookie)
+
+	// respond with JSON body
 	RespondSuccessJSON(rw, loginResp, http.StatusOK)
 }

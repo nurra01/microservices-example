@@ -24,8 +24,7 @@ type LoginReq struct {
 // LoginResp defines response stcture for Login
 type LoginResp struct {
 	*User
-	Token        string `json:"token"`
-	RefreshToken string `json:"refreshToken"`
+	Token string `json:"access_token"`
 }
 
 // Validate fields to be correct
