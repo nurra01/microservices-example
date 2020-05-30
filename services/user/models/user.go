@@ -27,7 +27,7 @@ func (u *RegisterUser) Validate() error {
 		return errors.New("email is invalid")
 	}
 
-	// for simplicity just validate password to have at elast 8 characters (don't do in production)
+	// for simplicity just validate password to have at least 8 characters (don't do in production)
 	if len(u.Password) < 8 {
 		return errors.New("invalid password, password must be at least 8 characters long")
 	}

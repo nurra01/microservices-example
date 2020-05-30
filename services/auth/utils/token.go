@@ -46,16 +46,14 @@ func GenerateRefreshToken(user *models.User) (string, error) {
 // ExtractAccessToken gets access token from request header
 func ExtractAccessToken(req *http.Request) (string, error) {
 	authHeader := req.Header.Get("Authorization")
-	if authorizationHeader != "" {
-		bearerToken := strings.Split(authorizationHeader, " ")
+	if authHeader != "" {
+		bearerToken := strings.Split(authHeader, " ")
 		if len(bearerToken) == 2 {
 			return bearerToken[1], nil
-		} else {
-			return "", errors.New("Invalid authorization token")
 		}
-	} else {
-		return "", errors.New("Missing 'Authorization' header")
+		return "", errors.New("Invalid authorization token")
 	}
+	return "", errors.New("Missing 'Authorization' header")
 }
 
 // TokenValid validates whether token valid
@@ -63,7 +61,7 @@ func TokenValid(bearerToken string) error {
 	// parse bearer token
 	token, err := jwt.Parse(bearerToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
 		return []byte(os.Getenv("JWT_SECRET")), nil
 	})

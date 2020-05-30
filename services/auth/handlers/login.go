@@ -67,7 +67,7 @@ func (h *AuthHandler) Login(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	// Verify passwords to match
-	err = utils.VerifyPassword(user.Password, loginReq.Password)
+	err = user.VerifyPassword(loginReq.Password)
 	if err != nil {
 		RespondError(rw, "invalid email/password", http.StatusBadRequest)
 		return
