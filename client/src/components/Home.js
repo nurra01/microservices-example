@@ -2,18 +2,30 @@ import React from "react"
 import { Button } from "@material-ui/core"
 
 function Home(props) {
-    const handleRedirect = () => {
-        props.history.push("register")
+    const handleRedirect = (e) => {
+        if (e.target.innerText === "REGISTER") {
+            props.history.push("register")
+        } else {
+            props.history.push("login")
+        }
     }
     return (
         <div className="home">
             <h1>Welcome to microservices example app</h1>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={handleRedirect}>
-                Register
-            </Button>
+            <div className="home-btns">
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleRedirect}>
+                    Register
+                </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleRedirect}>
+                    Login
+                </Button>
+            </div>
         </div>
     )
 }

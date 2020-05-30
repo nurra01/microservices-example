@@ -27,6 +27,13 @@ code {
   width: 80%;
 }
 
+.home-btns {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  width: 25%;
+}
+
 .register {
   display: 'flex';
   flex-direction: 'column';

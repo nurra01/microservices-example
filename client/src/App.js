@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect, Route, Switch, BrowserRouter } from 'react-router-dom'
+import { Route, Switch, BrowserRouter } from 'react-router-dom'
 import { Home, Register, Verify, NotFound, Login } from './components';
 
 function App() {

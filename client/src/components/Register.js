@@ -10,7 +10,7 @@ function Register() {
     const [lastName, handleLastNameChange] = useInputState("")
     const [email, handleEmailChange] = useInputState("")
     const [password, handlePasswordChange] = useInputState("")
-    const [isRegistered, setIsRegistered] = useState(null)
+    const [isRegistered, setIsRegistered] = useState(false)
     const [message, setMessage] = useState("")
 
     const handleSubmit = async (event) => {
@@ -26,7 +26,6 @@ function Register() {
             setIsRegistered(true)
         } catch (err) {
             setMessage(err.response.data.message)
-            setIsRegistered(false)
         }
     }
 
@@ -77,13 +76,13 @@ function Register() {
                             </Button>
                         </form>
                         {
-                            isRegistered == false &&
+                            message !== "" &&
                             <Alert
                                 className="alert"
                                 variant="filled"
                                 severity={"error"}
                                 onClose={() => {
-                                    setIsRegistered(null)
+                                    setMessage("")
                                 }}
                             >
                                 {message}
