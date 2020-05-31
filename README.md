@@ -1,7 +1,8 @@
 # Microservices example
 Simple authentication example app built using microservices architecture.
 It has few services and client app which consumes these services.
-Services are build using: **Go, Kafka, Redis, NodeJS**
+Services are built using: **Go, Kafka, Redis, NodeJS, PostgreSQL**.
+Client is simple **ReactJS** application.
 
 To start sample please follow steps described below.
 
