@@ -31,7 +31,7 @@ func main() {
 
 	port := os.Getenv("PORT") // service run port
 	if port == "" {
-		port = "8080"
+		port = "8081"
 	}
 
 	// check secret key env variable
