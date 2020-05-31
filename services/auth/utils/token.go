@@ -17,8 +17,7 @@ func GenerateToken(user *models.User) (string, error) {
 	secretKey := os.Getenv("JWT_SECRET")
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["firstName"] = user.FirstName
-	claims["lastName"] = user.LastName
+	claims["userID"] = user.ID
 	claims["exp"] = time.Now().Add(time.Minute * 30).Unix() // token expires in 30 minutes
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(secretKey))
@@ -33,7 +32,9 @@ func GenerateRefreshToken(user *models.User) (string, error) {
 	secretKey := os.Getenv("JWT_SECRET")
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
-	claims["user"] = user
+	claims["userID"] = user.ID
+	claims["firstName"] = user.FirstName
+	claims["lastName"] = user.LastName
 	claims["exp"] = time.Now().Add(time.Hour * 24 * 7).Unix() // token expires in 7 days
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString([]byte(secretKey))
@@ -57,7 +58,7 @@ func ExtractAccessToken(req *http.Request) (string, error) {
 }
 
 // TokenValid validates whether token valid
-func TokenValid(bearerToken string) error {
+func TokenValid(bearerToken string) (jwt.MapClaims, error) {
 	// parse bearer token
 	token, err := jwt.Parse(bearerToken, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -67,13 +68,14 @@ func TokenValid(bearerToken string) error {
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	// if token is invalid return message
 	if !token.Valid {
-		return errors.New("Invalid authorization token")
+		return nil, errors.New("Invalid authorization token")
 	}
 
-	return nil
+	claims := token.Claims.(jwt.MapClaims)
+	return claims, nil
 }

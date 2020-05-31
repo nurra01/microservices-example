@@ -15,15 +15,20 @@ type GenericResponse struct {
 	Response string `json:"response"`
 }
 
-// LoginReq defines request structure for Login
+// LoginReq defines request structure for Login handler
 type LoginReq struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-// LoginResp defines response stcture for Login
+// LoginResp defines response stcture for Login request
 type LoginResp struct {
 	*User
+	Token string `json:"access_token"`
+}
+
+// AccessTokenResp defines response structure for AccessToken request
+type AccessTokenResp struct {
 	Token string `json:"access_token"`
 }
 

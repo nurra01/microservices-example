@@ -56,7 +56,7 @@ func (h *AuthHandler) Login(rw http.ResponseWriter, req *http.Request) {
 	loginReq := req.Context().Value(KeyLoginReq{}).(*models.LoginReq)
 
 	// get verified user from db
-	user, err := db.GetUser(loginReq.Email)
+	user, err := db.GetUserByEmail(loginReq.Email)
 	if err != nil {
 		h.log.Errorf("failed to get user from DB. Error: %s", err.Error())
 		if err == sql.ErrNoRows {
@@ -89,8 +89,8 @@ func (h *AuthHandler) Login(rw http.ResponseWriter, req *http.Request) {
 
 	// response structure
 	loginResp := &models.LoginResp{
-		user,
-		token,
+		User:  user,
+		Token: token,
 	}
 
 	// set refresh token in cookie
@@ -98,8 +98,9 @@ func (h *AuthHandler) Login(rw http.ResponseWriter, req *http.Request) {
 		Name:     "refresh_token",
 		Value:    refreshToken,
 		HttpOnly: true,
-		Domain:   "",                                 // set domain if not localhost
-		Secure:   true,                               // set if we have HTPPS
+		Domain:   ".localhost", // set domain if not localhost
+		Path:     "/",
+		Secure:   false,                              // set if we have HTPPS (flase for localhost, don't use false in prod)
 		Expires:  time.Now().Add(time.Hour * 24 * 7), // expires in 7 days
 	}
 	http.SetCookie(rw, cookie)

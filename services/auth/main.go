@@ -60,13 +60,16 @@ func main() {
 	// POST requests
 	postR := sm.Methods(http.MethodPost).Subrouter()
 	postR.Handle("/user/login", ah.MiddlewareValidateLogin(http.HandlerFunc(ah.Login)))
-	// postR.Handle("/aut/token")
+
+	// GET requests
+	getR := sm.Methods(http.MethodGet).Subrouter()
+	getR.Handle("/auth/token", ah.MiddlewareValidateAccessToken(http.HandlerFunc(ah.AccessToken)))
 
 	// CORS handler
 	crs := cors.New(cors.Options{
 		AllowedOrigins:   []string{"http://localhost:3000"},
 		AllowedMethods:   []string{"GET", "POST"},
-		AllowedHeaders:   []string{"Content-Type", "Access-Control-Allow-Origin"},
+		AllowedHeaders:   []string{"Content-Type", "Access-Control-Allow-Origin", "Authorization"},
 		AllowCredentials: true,
 	})
 	ch := crs.Handler(sm)
