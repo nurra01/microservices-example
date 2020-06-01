@@ -64,6 +64,7 @@ func main() {
 	// GET requests
 	getR := sm.Methods(http.MethodGet).Subrouter()
 	getR.Handle("/auth/token", ah.MiddlewareValidateAccessToken(http.HandlerFunc(ah.AccessToken)))
+	getR.Handle("/users/{id}/profile", ah.MiddlewareValidateUserProfile(http.HandlerFunc(ah.UserProfile)))
 
 	// CORS handler
 	crs := cors.New(cors.Options{
