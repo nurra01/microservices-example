@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react"
 import { CircularProgress, Button } from "@material-ui/core"
+import { Navbar } from "./"
 import axios from "axios"
 
 function Verify(props) {
@@ -29,18 +30,20 @@ function Verify(props) {
 
     useEffect(() => {
         fetchAPI()
-    })
+    }, [])
 
     return (
         <div className="verify">
-            {
-                isVerified == null ?
-                    <>
+            {isVerified == null ?
+                (
+                    <div className="content">
                         <h1>Verifing your account...</h1>
                         <CircularProgress size="4rem" />
-                    </>
-                    :
-                    <>
+                    </div>
+                )
+                :
+                (
+                    <div className="content">
                         <h1>{message}</h1>
                         <Button
                             type="submit"
@@ -50,7 +53,8 @@ function Verify(props) {
                         >
                             {isVerified ? "Login" : "Register"}
                         </Button>
-                    </>
+                    </div>
+                )
             }
         </div>
     )

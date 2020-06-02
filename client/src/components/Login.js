@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react"
 import { TextField, Button } from "@material-ui/core"
-import Alert from '@material-ui/lab/Alert';
 import useInputState from "../hooks/useInputState"
 import axios from "axios"
+import { setAccessToken } from "../utils/utils";
+import { Navbar, Error } from "./"
 
 function Login(props) {
     const [email, handleEmailChange] = useInputState("")
@@ -13,10 +14,17 @@ function Login(props) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            await axios.post("http://localhost:8081/user/login", {
-                email,
-                password
-            })
+            const resp = await axios.post("http://localhost:8081/user/login",
+                {
+                    email,
+                    password,
+                },
+                {
+                    withCredentials: true
+                }
+            )
+            // set access_token in session_storage
+            setAccessToken(resp.data['access_token'])
             setIsLoggedIn(true)
         } catch (err) {
             setMessage(err.response.data.message)
@@ -25,12 +33,13 @@ function Login(props) {
 
     useEffect(() => {
         if (isLoggedIn) {
-            props.history.push("/")
+            props.history.push("/profile")
         }
     })
 
     return (
         <div className="register">
+            <Navbar history={props.history} />
             <>
                 <h1>Log in</h1>
                 <form
@@ -60,21 +69,12 @@ function Login(props) {
                             width: '100px',
                             margin: '20px auto'
                         }}>
-                        Sign up
+                        Log in
                     </Button>
                 </form>
                 {
                     message !== "" &&
-                    <Alert
-                        className="alert"
-                        variant="filled"
-                        severity={"error"}
-                        onClose={() => {
-                            setMessage("")
-                        }}
-                    >
-                        {message}
-                    </Alert>
+                    <Error message={message} setMessage={setMessage} />
                 }
             </>
         </div >

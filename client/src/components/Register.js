@@ -3,9 +3,10 @@ import { TextField, Button } from "@material-ui/core"
 import Alert from '@material-ui/lab/Alert';
 import useInputState from "../hooks/useInputState"
 import axios from "axios"
+import { Navbar, Error } from "./";
 
 
-function Register() {
+function Register(props) {
     const [firstName, handleFirstNameChange] = useInputState("")
     const [lastName, handleLastNameChange] = useInputState("")
     const [email, handleEmailChange] = useInputState("")
@@ -31,10 +32,11 @@ function Register() {
 
     return (
         <div className="register">
+            <Navbar history={props.history} />
             {
                 !isRegistered ?
                     <>
-                        <h1>Register</h1>
+                        <h1>Welcome to SampleAuth</h1>
                         <form
                             onSubmit={handleSubmit}
                             noValidate
@@ -77,33 +79,26 @@ function Register() {
                         </form>
                         {
                             message !== "" &&
-                            <Alert
-                                className="alert"
-                                variant="filled"
-                                severity={"error"}
-                                onClose={() => {
-                                    setMessage("")
-                                }}
-                            >
-                                {message}
-                            </Alert>
+                            <Error message={message} setMessage={setMessage} />
                         }
                     </>
                     :
-                    <>
-                        <Alert
-                            className="alert"
-                            variant="filled"
-                            severity="success"
-                        >
-                            {message}
-                        </Alert>
-                        <h3>Confirm your email address</h3>
-                        <p>
-                            We have sent an email with a confirmation link to your email address.
-                            In order to complete the sign-up process, please click the confirmation link.
-                        </p>
-                    </>
+                    (
+                        <div className="content">
+                            <Alert
+                                className="alert"
+                                variant="filled"
+                                severity="success"
+                            >
+                                {message}
+                            </Alert>
+                            <h3>Confirm your email address</h3>
+                            <p>
+                                We have sent an email with a confirmation link to your email address.
+                                In order to complete the sign-up process, please click the confirmation link.
+                            </p>
+                        </div>
+                    )
             }
         </div >
     )

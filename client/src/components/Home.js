@@ -1,29 +1,26 @@
 import React from "react"
 import { Button } from "@material-ui/core"
+import { Navbar } from "./"
 
 function Home(props) {
     const handleRedirect = (e) => {
-        if (e.target.innerText === "REGISTER") {
-            props.history.push("register")
-        } else {
-            props.history.push("login")
-        }
+        props.history.push("register")
     }
     return (
         <div className="home">
-            <h1>Welcome to microservices example app</h1>
+            <Navbar history={props.history} />
+            <div className="content">
+                <h1>Welcome</h1>
+                <p>This is simple authentication app which consumes microservices.</p>
+                <p>To get started please sign up or log in to access your profile.</p>
+            </div>
+
             <div className="home-btns">
                 <Button
                     variant="contained"
                     color="primary"
                     onClick={handleRedirect}>
-                    Register
-                </Button>
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleRedirect}>
-                    Login
+                    Sign Up
                 </Button>
             </div>
         </div>
