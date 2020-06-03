@@ -60,6 +60,7 @@ func main() {
 	// POST requests
 	postR := sm.Methods(http.MethodPost).Subrouter()
 	postR.Handle("/user/login", ah.MiddlewareValidateLogin(http.HandlerFunc(ah.Login)))
+	postR.Handle("/user/logout", http.HandlerFunc(ah.Logout))
 
 	// GET requests
 	getR := sm.Methods(http.MethodGet).Subrouter()

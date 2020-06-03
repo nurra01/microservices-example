@@ -16,6 +16,10 @@ html, body, #root {
   justify-content: space-between;
 }
 
+#app-icon:hover {
+  cursor: pointer;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',

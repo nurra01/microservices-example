@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react"
 import { CircularProgress, Button } from "@material-ui/core"
-import { Navbar } from "./"
 import axios from "axios"
 
 function Verify(props) {
