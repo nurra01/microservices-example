@@ -1,5 +1,6 @@
 # Microservices example
 Simple authentication example app built using microservices architecture.
+<br />
 It has few services and client app which consumes these services.
 <br />
 Services are built using: **Go, Kafka, Redis, PostgreSQL**.
