@@ -25,12 +25,12 @@ func main() {
 	// load .env file
 	err := godotenv.Load("user-service.env")
 	if err != nil {
-		log.Fatal("failed to load user-service.env file")
+		log.Debug("failed to load user-service.env file")
 	}
 
 	port := os.Getenv("PORT") // service run port
 	if port == "" {
-		port = "8080"
+		port = "8080" // if missing env variable, use default
 	}
 
 	// configure kafka writer

@@ -15,6 +15,10 @@ import (
 // GenerateToken create a new access token
 func GenerateToken(user *models.User) (string, error) {
 	secretKey := os.Getenv("JWT_SECRET")
+	// if missing env variable, use default
+	if secretKey == "" {
+		secretKey = "supersecret"
+	}
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["userID"] = user.ID
@@ -30,6 +34,10 @@ func GenerateToken(user *models.User) (string, error) {
 // GenerateRefreshToken create a new refresh token with longer expiration time
 func GenerateRefreshToken(user *models.User) (string, error) {
 	secretKey := os.Getenv("JWT_SECRET")
+	// if missing env variable, use default
+	if secretKey == "" {
+		secretKey = "supersecret"
+	}
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["userID"] = user.ID
@@ -64,7 +72,12 @@ func TokenValid(bearerToken string) (jwt.MapClaims, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
-		return []byte(os.Getenv("JWT_SECRET")), nil
+		secretKey := os.Getenv("JWT_SECRET")
+		// if missing env variable, use default
+		if secretKey == "" {
+			secretKey = "supersecret"
+		}
+		return []byte(secretKey), nil
 	})
 
 	if err != nil {

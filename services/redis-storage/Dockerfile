@@ -25,7 +25,7 @@ WORKDIR /build
 RUN cp /app/main .
 
 # Copy file with env variables 
-RUN cp /app/redis-storage-service.env .
+RUN cp /app/redis-storage-service.env . || :
 
 # Command to run when starting the container
 CMD ["/build/main"]

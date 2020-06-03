@@ -26,17 +26,12 @@ func main() {
 	// load .env file
 	err := godotenv.Load("auth-service.env")
 	if err != nil {
-		log.Fatal("failed to load auth-service.env file")
+		log.Debug("failed to load auth-service.env file")
 	}
 
 	port := os.Getenv("PORT") // service run port
 	if port == "" {
-		port = "8081"
-	}
-
-	// check secret key env variable
-	if os.Getenv("JWT_SECRET") == "" {
-		log.Fatal("missing JWT_SECRET env variable")
+		port = "8081" // if missing use default
 	}
 
 	// configure db connection

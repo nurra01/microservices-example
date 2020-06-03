@@ -2,9 +2,7 @@ package kafka
 
 import (
 	"context"
-	"errors"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/segmentio/kafka-go"
@@ -16,14 +14,16 @@ var writer *kafka.Writer
 
 // ConfigureWriter sets up a kafka writer to produce messages to 'verifiy user' topic
 func ConfigureWriter() (w *kafka.Writer, err error) {
-	brokerURL := fmt.Sprintf("%s:%s", os.Getenv("KAFKA_BROKER_HOST"), os.Getenv("KAFKA_BROKER_PORT"))
-	brokers := []string{brokerURL}
-	topic := os.Getenv("KAFKA_VER_TOPIC")
-	clientID := os.Getenv("KAFKA_CLIENT_ID")
-
-	if topic == "" || clientID == "" || len(brokers) < 1 {
-		return nil, errors.New("failed to load required kafka env variables")
+	// if missing env variables, use default
+	if brokerHost == "" || brokerPort == "" || verUserTopic == "" || clientID == "" {
+		brokerHost = "kafka"
+		brokerPort = "9092"
+		verUserTopic = "verify-user"
+		clientID = "kafka-client-id"
 	}
+
+	brokerURL := fmt.Sprintf("%s:%s", brokerHost, brokerPort)
+	brokers := []string{brokerURL}
 
 	dialer := &kafka.Dialer{
 		Timeout:  10 * time.Second,
@@ -32,7 +32,7 @@ func ConfigureWriter() (w *kafka.Writer, err error) {
 
 	config := kafka.WriterConfig{
 		Brokers:          brokers,
-		Topic:            topic,
+		Topic:            verUserTopic,
 		Balancer:         &kafka.LeastBytes{},
 		Dialer:           dialer,
 		WriteTimeout:     10 * time.Second,

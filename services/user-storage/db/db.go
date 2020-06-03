@@ -3,7 +3,6 @@ package db
 import (
 	"fmt"
 	"os"
-	"services/user-storage/models"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -11,39 +10,42 @@ import (
 // pointer to the db connection to use in other functions
 var dbConn *sqlx.DB
 
-// ConnectDB connects to the database and returns an instance
-func ConnectDB() (*sqlx.DB, error) {
-	// get DB connection URI and driver name
-	dbDriver, dbURI := getDbURI()
-	fmt.Println(dbURI)
-	// connect to the DB
-	conn, err := sqlx.Connect(dbDriver, dbURI)
-	if err != nil {
-		return nil, fmt.Errorf("failed to connect DB. Error: %s", err.Error())
-	}
-	// ping DB to be sure
-	err = conn.Ping()
-	if err != nil {
-		return nil, fmt.Errorf("failed to ping DB. Error: %s", err.Error())
-	}
-	dbConn = conn // set pointer to global dbConn
-	return conn, nil
-}
-
-// returns DB connection URI
-func getDbURI() (string, string) {
+// Connect connects to the database and returns an instance
+func Connect() error {
 	// get all environment variables for DB connection
-	dbConfig := &models.DBConfig{
-		Host:   os.Getenv("DB_HOST"),
-		Port:   os.Getenv("DB_PORT"),
-		User:   os.Getenv("DB_USER"),
-		Pass:   os.Getenv("DB_PASS"),
-		Name:   os.Getenv("DB_NAME"),
-		Driver: os.Getenv("DB_DRIVER"),
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	user := os.Getenv("DB_USER")
+	pass := os.Getenv("DB_PASS")
+	dbName := os.Getenv("DB_NAME")
+	driver := os.Getenv("DB_DRIVER")
+
+	// if missing env variables, use default
+	if host == "" || port == "" || user == "" || pass == "" || dbName == "" || driver == "" {
+		driver = "postgres"
+		host = "database"
+		port = "5432"
+		dbName = "kafka-example"
+		user = "admin"
+		pass = "admin"
 	}
 
 	// DB URI "postgres://username:passw@host:5432/dbName?sslmode=disable"
-	uri := fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=disable",
-		dbConfig.Driver, dbConfig.User, dbConfig.Pass, dbConfig.Host, dbConfig.Port, dbConfig.Name)
-	return dbConfig.Driver, uri
+	connURI := fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=disable",
+		driver, user, pass, host, port, dbName)
+
+	// connect to the DB
+	conn, err := sqlx.Connect(driver, connURI)
+	if err != nil {
+		return fmt.Errorf("failed to connect DB. Error: %s", err.Error())
+	}
+
+	// ping DB to be sure
+	err = conn.Ping()
+	if err != nil {
+		return fmt.Errorf("failed to ping DB. Error: %s", err.Error())
+	}
+
+	dbConn = conn // set pointer to global dbConn
+	return nil
 }

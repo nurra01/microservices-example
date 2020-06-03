@@ -17,11 +17,11 @@ func main() {
 	// load .env file
 	err := godotenv.Load("user-storage-service.env")
 	if err != nil {
-		log.Fatal("failed to load user-storage-service.env file")
+		log.Debug("failed to load user-storage-service.env file")
 	}
 
 	// init a connection with DB
-	_, err = db.ConnectDB()
+	err = db.Connect()
 	if err != nil {
 		log.Fatal(err)
 	}

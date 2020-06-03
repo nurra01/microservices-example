@@ -2,7 +2,6 @@ package kafka
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"os"
 	"services/redis-storage/redis"
@@ -15,22 +14,30 @@ import (
 
 var reader *kafka.Reader // pointer to the reader, so Pull can use it
 
+var brokerHost = os.Getenv("KAFKA_BROKER_HOST")
+var brokerPort = os.Getenv("KAFKA_BROKER_PORT")
+var regUserTopic = os.Getenv("KAFKA_REG_TOPIC") // topic for registered users
+var verUserTopic = os.Getenv("KAFKA_VER_TOPIC") // topic for verified users
+var clientID = os.Getenv("KAFKA_CLIENT_ID")
+
 // ConfigureReader sets up a kafka reader
 func ConfigureReader() (*kafka.Reader, error) {
-	brokerURL := fmt.Sprintf("%s:%s", os.Getenv("KAFKA_BROKER_HOST"), os.Getenv("KAFKA_BROKER_PORT"))
-	brokers := []string{brokerURL}
-	topic := os.Getenv("KAFKA_REG_TOPIC")
-	clientID := os.Getenv("KAFKA_CLIENT_ID")
-
-	if topic == "" || clientID == "" || len(brokers) < 1 {
-		return nil, errors.New("failed to load required kafka env variables")
+	// if missing env variables, use default
+	if brokerHost == "" || brokerPort == "" || regUserTopic == "" || clientID == "" {
+		brokerHost = "kafka"
+		brokerPort = "9092"
+		regUserTopic = "register-user"
+		clientID = "kafka-client-id"
 	}
+
+	brokerURL := fmt.Sprintf("%s:%s", brokerHost, brokerPort)
+	brokers := []string{brokerURL}
 
 	// config for reader
 	config := kafka.ReaderConfig{
 		Brokers:         brokers,
 		GroupID:         clientID,
-		Topic:           topic,
+		Topic:           regUserTopic,
 		MinBytes:        10e3,            // 10KB
 		MaxBytes:        10e6,            // 10MB
 		MaxWait:         1 * time.Second, // Maximum amount of time to wait for new data to come when fetching batches of messages from kafka.

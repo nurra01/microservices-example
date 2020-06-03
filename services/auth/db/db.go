@@ -1,7 +1,6 @@
 package db
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -21,9 +20,14 @@ func Connect() error {
 	dbName := os.Getenv("DB_NAME")
 	driver := os.Getenv("DB_DRIVER")
 
-	// validate required env variables
+	// if missing env variables, use default
 	if host == "" || port == "" || user == "" || pass == "" || dbName == "" || driver == "" {
-		return errors.New("missing required DB connection env variables")
+		driver = "postgres"
+		host = "database"
+		port = "5432"
+		dbName = "kafka-example"
+		user = "admin"
+		pass = "admin"
 	}
 
 	// DB URI "postgres://username:passw@host:5432/dbName?sslmode=disable"

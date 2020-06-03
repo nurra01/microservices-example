@@ -18,6 +18,12 @@ func ConnectRedis() error {
 	host := os.Getenv("REDIS_HOST")
 	port := os.Getenv("REDIS_PORT")
 
+	// if missing env variables, use default
+	if host == "" || port == "" {
+		host = "redis"
+		port = "6379"
+	}
+
 	c := redis.NewClient(&redis.Options{
 		Addr:     fmt.Sprintf("%s:%s", host, port),
 		Password: "", // no password set

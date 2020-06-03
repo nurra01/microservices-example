@@ -3,7 +3,6 @@ package kafka
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"services/email/models"
@@ -19,14 +18,21 @@ var reader *kafka.Reader // pointer to the reader, so Pull can use it
 
 // Configure sets up a kafka reader
 func Configure() (*kafka.Reader, error) {
-	brokerURL := fmt.Sprintf("%s:%s", os.Getenv("KAFKA_BROKER_HOST"), os.Getenv("KAFKA_BROKER_PORT"))
-	brokers := []string{brokerURL}
-	topic := os.Getenv("KAFKA_TOPIC")
+	brokerHost := os.Getenv("KAFKA_BROKER_HOST")
+	brokerPort := os.Getenv("KAFKA_BROKER_PORT")
+	topic := os.Getenv("KAFKA_VER_TOPIC") // topic for verified users
 	clientID := os.Getenv("KAFKA_CLIENT_ID")
 
-	if topic == "" || clientID == "" || len(brokers) < 1 {
-		return nil, errors.New("failed to load required kafka env variables")
+	// if missing env variables, use default
+	if brokerHost == "" || brokerPort == "" || topic == "" || clientID == "" {
+		brokerHost = "kafka"
+		brokerPort = "9092"
+		topic = "verify-user"
+		clientID = "kafka-client-id"
 	}
+
+	brokerURL := fmt.Sprintf("%s:%s", brokerHost, brokerPort)
+	brokers := []string{brokerURL}
 
 	// config for reader
 	config := kafka.ReaderConfig{
@@ -51,25 +57,20 @@ func ReadMessages(log *logrus.Logger) {
 		if err != nil {
 			log.Error("error while receiving messages: %v", err.Error())
 		}
-		switch msg.Topic {
-		case "verify-user":
-			// when message received unmarshal it to object
-			usr := &models.User{}
-			err = json.Unmarshal(msg.Value, usr)
-			if err != nil {
-				log.Error(err)
-			}
-			// log user
-			log.Info(usr)
-
-			// send email to the person
-			err = utils.SendVerifyEmail(usr.Email, usr.FirstName, string(msg.Key))
-			if err != nil {
-				log.Error("Error sending email ", err)
-			}
-			log.Infof("successfully send email to %s", usr.Email)
-		default:
-			log.Info("different topic")
+		// when message received unmarshal it to object
+		usr := &models.User{}
+		err = json.Unmarshal(msg.Value, usr)
+		if err != nil {
+			log.Error(err)
 		}
+		// log user
+		log.Info(usr)
+
+		// send email to the person
+		err = utils.SendVerifyEmail(usr.Email, usr.FirstName, string(msg.Key))
+		if err != nil {
+			log.Error("Error sending email ", err)
+		}
+		log.Infof("successfully send email to %s", usr.Email)
 	}
 }

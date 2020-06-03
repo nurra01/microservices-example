@@ -26,7 +26,7 @@ WORKDIR /build
 RUN cp /app/main .
 
 # Copy file with env variables 
-RUN cp /app/auth-service.env .
+RUN cp /app/auth-service.env . || :
 
 # Export necessary port
 EXPOSE 8081

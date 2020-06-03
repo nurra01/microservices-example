@@ -15,7 +15,7 @@ func main() {
 	// load .env file
 	err := godotenv.Load("redis-storage-service.env")
 	if err != nil {
-		log.Fatal("failed to load redis-storage-service.env file")
+		log.Debug("failed to load redis-storage-service.env file")
 	}
 
 	// setup redis client

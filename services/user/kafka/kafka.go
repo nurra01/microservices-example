@@ -19,11 +19,23 @@ var verUserWriter *kafka.Writer
 
 // Configure sets up a kafka writers
 func Configure() (*kafka.Writer, *kafka.Writer, error) {
-	brokerURL := fmt.Sprintf("%s:%s", os.Getenv("KAFKA_BROKER_HOST"), os.Getenv("KAFKA_BROKER_PORT"))
-	brokers := []string{brokerURL}
+	brokerHost := os.Getenv("KAFKA_BROKER_HOST")
+	brokerPort := os.Getenv("KAFKA_BROKER_PORT")
 	regUserTopic := os.Getenv("KAFKA_REG_TOPIC") // topic for registered users
 	verUserTopic := os.Getenv("KAFKA_VER_TOPIC") // topic for verified users
 	clientID := os.Getenv("KAFKA_CLIENT_ID")
+
+	// if missing env variables, use default
+	if brokerHost == "" || brokerPort == "" || regUserTopic == "" || verUserTopic == "" || clientID == "" {
+		brokerHost = "kafka"
+		brokerPort = "9092"
+		regUserTopic = "register-user"
+		verUserTopic = "verified-user"
+		clientID = "kafka-client-id"
+	}
+
+	brokerURL := fmt.Sprintf("%s:%s", brokerHost, brokerPort)
+	brokers := []string{brokerURL}
 
 	// configure writer for pushing registered users
 	w1, err := configureWriter(regUserTopic, clientID, brokers)

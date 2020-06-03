@@ -2,11 +2,30 @@
 Simple authentication example app built using microservices architecture.
 It has few services and client app which consumes these services.
 <br />
-Services are built using: **Go, Kafka, Redis, NodeJS, PostgreSQL**.
+Services are built using: **Go, Kafka, Redis, PostgreSQL**.
 <br />
 Client is simple **ReactJS** application.
 
-To start sample please follow steps described below.
+
+### Quick start
+To start the app quickly with default configurations follow the next steps:
+
+1. Create **email-service.env** file in [./services/email](./services/email)
+```
+# SMTP #
+SMTP_USER=user_email_address
+SMTP_PASS=user_email_password
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+```
+
+2. Run ``docker-compose up`` to start all services and client app.
+
+3. Go to client app and try all services on address: ``http://localhost:3000``
+
+
+### Start with custom configuration <!-- omit in toc -->
+To start the app with custom configurations follow the next steps:
 
 1. Create **email-service.env** file in [./services/email](./services/email)
 ```
